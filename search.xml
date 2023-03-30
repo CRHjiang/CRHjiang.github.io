@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>差分</title>
+      <link href="/2023/03/30/%E5%B7%AE%E5%88%86%E6%80%9D%E6%83%B3/"/>
+      <url>/2023/03/30/%E5%B7%AE%E5%88%86%E6%80%9D%E6%83%B3/</url>
+      
+        <content type="html"><![CDATA[<p>前缀和主要适⽤的场景是原始数组不会被修改的情况下，频繁查询某个区间的累加和。<br>差分数组的主要适⽤场景是频繁对原始数组的某个区间的元素进⾏增减，然后可能还会让你返回经过多次修改后的数组。</p><h3 id="差分的工具类："><a href="#差分的工具类：" class="headerlink" title="差分的工具类："></a>差分的工具类：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Difference</span> &#123;</span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span>[] diff;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造差分数组</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">Difference</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line"><span class="keyword">assert</span> nums.length &gt; <span class="number">0</span> ;</span><br><span class="line">diff = <span class="keyword">new</span> <span class="title class_">int</span>[nums.length];</span><br><span class="line">diff[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt; diff.length ; i++) &#123;</span><br><span class="line">diff[i] = nums[i] - nums[i-<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//给数组指定区域做加或减操作</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">increment</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j, <span class="type">int</span> val)</span> &#123;</span><br><span class="line">diff[i] += val;</span><br><span class="line"><span class="keyword">if</span> (j + <span class="number">1</span> &lt; diff.length) &#123;</span><br><span class="line">diff[j + <span class="number">1</span>] -= val;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回操作完成之后的原数组</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] result() &#123;</span><br><span class="line"><span class="type">int</span>[] res = <span class="keyword">new</span> <span class="title class_">int</span>[diff.length];</span><br><span class="line">res[<span class="number">0</span>] = diff[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt; res.length ; i++) &#123;</span><br><span class="line">res[i] = res[i-<span class="number">1</span>] + diff[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h3 id="leetcode-1109-航班预定统计"><a href="#leetcode-1109-航班预定统计" class="headerlink" title="leetcode 1109 航班预定统计"></a>leetcode 1109 航班预定统计</h3><p>这道题就是典型的差分的思想的应用。<br>重点是要理解题目的意思，只要理解了题目的意思，然后联想到差分数组的特点，就可以很轻松的解决。</p><p>题目中所谓的订票，其实就是对一个数组进行加减操作，这正好契合差分数组的思想。<br>需要注意的就是索引问题。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] corpFlightBookings(<span class="type">int</span>[][] bookings, <span class="type">int</span> n) &#123;</span><br><span class="line">    <span class="comment">// nums 初始化为全 0</span></span><br><span class="line">    <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">    <span class="comment">// 构造差分解法</span></span><br><span class="line">    <span class="type">Difference</span> <span class="variable">df</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Difference</span>(nums);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span>[] booking : bookings) &#123;</span><br><span class="line">        <span class="comment">// 注意转成数组索引要减⼀哦</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> booking[<span class="number">0</span>] - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> booking[<span class="number">1</span>] - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">val</span> <span class="operator">=</span> booking[<span class="number">2</span>];</span><br><span class="line">        <span class="comment">// 对区间 nums[i..j] 增加 val</span></span><br><span class="line">        df.increment(i, j, val);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回最终的结果数组</span></span><br><span class="line">    <span class="keyword">return</span> df.result();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 刷题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 刷题总结 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>前缀和</title>
       <link href="/2023/03/29/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
       <url>/2023/03/29/%E5%89%8D%E7%BC%80%E5%92%8C/</url>
@@ -143,6 +168,17 @@
     
     
     <entry>
+      <title>文章分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title></title>
       <link href="/css/custom.css"/>
       <url>/css/custom.css</url>
@@ -165,28 +201,6 @@
     
     
     <entry>
-      <title>文章分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>电影</title>
       <link href="/movies/index.html"/>
       <url>/movies/index.html</url>
@@ -201,6 +215,17 @@
       <title>音乐</title>
       <link href="/music/index.html"/>
       <url>/music/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
